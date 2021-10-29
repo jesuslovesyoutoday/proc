@@ -1,6 +1,6 @@
 #ifndef ASM_H
 #define ASM_H
-#include "input.h"
+#include "input/input.h"
 
 enum FileStatus asm_(char* input_file);
 
