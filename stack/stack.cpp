@@ -174,12 +174,12 @@ void stackPush(struct Stack* stack, void* value)
 	#endif
 }
 
-void stackPop(struct Stack* stack)
+double stackPop(struct Stack* stack)
 {
     #ifdef ERROR_LOG
         if (stackIsOk(stack) == STACK_IS_OK)
         {   
-            void* tmp = (void*)((char*)stack->data + (stack->size - 1) * stack->el_size);
+            double tmp = *((char*)stack->data + (stack->size - 1) * stack->el_size);
             stack->size--;
             stackResize(stack, -1);
             #ifdef HASH
@@ -189,6 +189,7 @@ void stackPop(struct Stack* stack)
         	    if (stackIsOk(stack) != STACK_IS_OK)
             	    stackDump(stack, stackIsOk(stack));
             #endif
+            return tmp;
         }
         else
         {
@@ -197,9 +198,10 @@ void stackPop(struct Stack* stack)
             #endif
         }
     #else
-    	void* tmp = (void*)((char*)stack->data + (stack->size - 1) * stack->el_size);
+    	double tmp = *(double*)((char*)stack->data + (stack->size - 1) * stack->el_size);
         stack->size--;
         stackResize(stack, -1);
+        return tmp;
     #endif 
 }
 

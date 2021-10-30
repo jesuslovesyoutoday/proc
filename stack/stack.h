@@ -1,10 +1,10 @@
 #ifndef STACK_H
 #define STACK_H
 
-#define ERROR_LOG
-#define CANARY
-#define HASH
-#define DUMP
+//#define ERROR_LOG
+//#define CANARY
+//#define HASH
+//#define DUMP
 
 #define TYPE "INT"
 #define CHAR
@@ -116,7 +116,7 @@ void stackPush(struct Stack* stack, void* value);
 //!
 //-----------------------------------------
 
-void stackPop(struct Stack* stack);
+double stackPop(struct Stack* stack);
 
 //-----------------------------------------
 //!
