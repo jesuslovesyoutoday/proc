@@ -190,6 +190,14 @@ void procExec(struct Proc* proc, char* filename)
 			stackPush(&(proc->stack), (void*)&el);
 			ptr += 2;
 			break;
+			
+//--------------------------------------------------------------------------------------------------------//
+
+		case MUL:
+			el = stackPop(&(proc->stack)) * stackPop(&(proc->stack));
+			stackPush(&(proc->stack), (void*)&el);
+			ptr += 2;
+			break;
 	}
 	} while(*(ptr) != '\0');
 }
