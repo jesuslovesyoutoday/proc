@@ -8,7 +8,8 @@ enum COMMAND {
     ADD  = 3,
     SUB  = 4,
     MUL  = 5,
-    DIV  = 6
+    DIV  = 6,
+    OUT  = 7
 };
 
 #endif //COMMANDS_H
