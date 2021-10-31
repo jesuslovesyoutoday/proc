@@ -41,6 +41,8 @@ void procExec(struct Proc* proc, char* filename)
 	char* ptr = proc->code;
 	char reg = '0';
 	double el = 0;
+	double el1 = 0;
+	double el2 = 0;
 	int ok = 0;
 	do
 	{
@@ -175,6 +177,16 @@ void procExec(struct Proc* proc, char* filename)
 
 		case ADD:
 			el = stackPop(&(proc->stack)) + stackPop(&(proc->stack));
+			stackPush(&(proc->stack), (void*)&el);
+			ptr += 2;
+			break;
+
+//--------------------------------------------------------------------------------------------------------//
+
+		case SUB:
+			el1 = stackPop(&(proc->stack));
+			el2 = stackPop(&(proc->stack));
+			el = el2 - el1;
 			stackPush(&(proc->stack), (void*)&el);
 			ptr += 2;
 			break;
