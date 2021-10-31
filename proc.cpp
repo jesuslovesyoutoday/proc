@@ -37,14 +37,19 @@ void procExec(struct Proc* proc, char* filename)
 			*ptr1 = '\0';
 		ptr1++;
 	} while (*ptr1 != '\0');
+	int args = 0;
 	char* ptr = proc->code;
 	char reg = '0';
 	int el = 0;
+	int ok = 0;
 	do
 	{
 		int cmd = (int)(*ptr - '0'); 
 		
 		switch (cmd) {
+		
+//-------------------------------------------------------------------------------------------------------//
+		
 		case PUSH:
 		
 			do
@@ -52,48 +57,58 @@ void procExec(struct Proc* proc, char* filename)
 				ptr++;
 			} while (*ptr != '\0');
 			ptr++;
-			int args = sscanf(ptr, "[%cx+%lg]", &reg, &el);
-			if (args == 2)
+			
+			ok = 0;
+			args = sscanf(ptr, "[%cx+%lg]%n", &reg, &el, &ok);
+			if (args == 2 && ok == 6)
 			{
-				el = proc->ds[int(reg - 'a') + el];
+				el = proc->ds[int(proc->regs[int(reg - 'a')] + el)];
 				stackPush(&(proc->stack), (void*)&el);
 			}
 			else
 			{
-				args = sscanf(ptr, "%cx+%lg", &reg, &el);
-				if (args == 2)
+				ok = 0;
+				args = sscanf(ptr, "%cx+%lg%n", &reg, &el, &ok);
+				if (args == 2 && ok == 4)
 				{
 					el += proc->regs[(int)(reg - 'a')];
 					stackPush(&(proc->stack), (void*)&el);
 				}
 				else
 				{
-					args = sscanf(ptr, "[%cx]", &reg);
-					if (args == 1)
+					ok = 0;
+					args = sscanf(ptr, "[%cx]%n", &reg, &ok);
+					if (args == 1 && ok == 4)
 					{
-						el = proc->ds[int(reg - 'a')];
+						el = proc->ds[int(proc->regs[int(reg - 'a')])];
 						stackPush(&(proc->stack), (void*)&el);
 					}
 					else
 					{
-						args = sscanf(ptr, "[%lg]", &el);
-						if (args == 1)
+						ok = 0;
+						args = sscanf(ptr, "[%lg]%n", &el, &ok);
+						if (args == 1 && ok == 3)
 						{
-							el = proc->ds[el];
+							el = proc->ds[int(el)];
 							stackPush(&(proc->stack), (void*)&el);
 						}
 						else
 						{
-							args =sscanf(ptr, "%lg", &el);
-							if (args == 1)
+							ok = 0;
+							args =sscanf(ptr, "%lg%n", &el, &ok);
+							if (args == 1 && ok == 1)
 							{
 								stackPush(&(proc->stack), (void*)&el);
 							}
 							else
 							{
-								args = sscanf(ptr, "%cx", &reg);
-								el = proc->regs[(int)(reg - 'a')];
-								stackPush(&(proc->stack), (void*)&el);
+								ok = 0;
+								args = sscanf(ptr, "%cx%n", &reg, &ok);
+								if (args == 1 && ok == 2)
+								{
+									el = proc->regs[(int)(reg - 'a')];
+									stackPush(&(proc->stack), (void*)&el);
+								}
 							}
 						}
 					}
@@ -106,6 +121,55 @@ void procExec(struct Proc* proc, char* filename)
 			} while (*ptr != '\0');
 			ptr++;
 			break;
-		}
+			
+//-------------------------------------------------------------------------------------------------------//
+			
+		case POP:
+			do
+			{
+				ptr++;
+			} while (*ptr != '\0');
+			ptr++;
+			
+			ok = 0;
+			args = sscanf(ptr, "%cx%n", &reg, &ok);
+			if (args == 1 && ok == 2)
+			{
+				proc->regs[int(reg - 'a')] = stackPop(&(proc->stack));
+			}
+			else
+			{
+				ok = 0;
+				args = sscanf(ptr, "[%cx]%n", &reg, &ok);
+				if (args == 1 && ok == 4)
+				{
+					proc->ds[int(proc->regs[int(reg - 'a')])] = stackPop(&(proc->stack));
+				}
+				else
+				{
+					ok = 0;
+					args = sscanf(ptr, "[%lg]%n", &el, &ok);
+					if (args == 1 && ok == 3)
+					{
+						proc->ds[int(el)] = stackPop(&(proc->stack));
+					}
+					else
+					{
+						ok = 0;
+						args = sscanf(ptr, "[%cx+%lg]%n", &reg, &el, &ok);
+						if (args == 2 && ok == 6)
+						{
+							proc->ds[int(proc->regs[int(reg - 'a')] + el)] = stackPop(&(proc->stack));
+						}
+					}
+				}
+			}
+			do
+			{
+				ptr++;
+			} while (*ptr != '\0');
+			ptr++;
+			break;
+	}
 	} while(*(ptr) != '\0');
 }
