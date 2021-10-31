@@ -97,8 +97,8 @@ void procExec(struct Proc* proc, char* filename)
 						else
 						{
 							ok = 0;
-							args =sscanf(ptr, "%lg%n", &el, &ok);
-							if (args == 1 && ok == 1)
+							args =sscanf(ptr, "%lg", &el);
+							if (args == 1)
 							{
 								stackPush(&(proc->stack), (void*)&el);
 							}
