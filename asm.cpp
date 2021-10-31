@@ -20,6 +20,7 @@ enum FileStatus asm_(char* input_file)
 	} while (*ptr1 != '\0');
 	
 	FILE* fin = fopen("asm.txt", "w");
+	setbuf(fin, NULL);
 	const char* ptr = buffer;
 	
 	do
@@ -47,12 +48,20 @@ enum FileStatus asm_(char* input_file)
 			}while(*ptr != '\0');
 			ptr++;
 			
-			fprintf(fin, "2 %s\n", ptr);
-			while (*ptr != '\0');
+			if ((strcmp(ptr, "push") && strcmp(ptr, "pop") && strcmp(ptr, "add") && strcmp(ptr, "sub")
+				&& strcmp(ptr, "mul") && strcmp(ptr, "div") && strcmp(ptr, "out")))
 			{
+				fprintf(fin, "2 %s\n", ptr);
+				while (*ptr != '\0');
+				{
+					ptr++;
+				}
 				ptr++;
 			}
-			ptr++;
+			else
+			{
+				fprintf(fin, "2\n");
+			}
 		}
 		else if (strcmp(ptr, "add") == 0)
 		{
@@ -63,8 +72,47 @@ enum FileStatus asm_(char* input_file)
 			ptr++;
 			
 			fprintf(fin, "3\n");
-
-		}  
+		}
+		else if (strcmp(ptr, "sub") == 0)
+		{
+			do
+			{
+				ptr++;
+			}while(*ptr != '\0');
+			ptr++;
+			
+			fprintf(fin, "4\n");
+		}
+		else if (strcmp(ptr, "mul") == 0)
+		{
+			do
+			{
+				ptr++;
+			}while(*ptr != '\0');
+			ptr++;
+			
+			fprintf(fin, "5\n");
+		}
+		else if (strcmp(ptr, "div") == 0)
+		{
+			do
+			{
+				ptr++;
+			}while (*ptr != '\0');
+			ptr++;
+			
+			fprintf(fin, "6\n");
+		}
+		else if (strcmp(ptr, "out") == 0)
+		{
+			do
+			{
+				ptr++;
+			}while (*ptr != '\0');
+			ptr++;
+			
+			fprintf(fin, "7\n");
+		}
 		
 	} while (*ptr != '\0');
 	
@@ -73,6 +121,7 @@ enum FileStatus asm_(char* input_file)
     int file_size = file_inf.st_size;
     
     free(buffer);
+    fflush(fin);
     fclose(fin);
     
     return (file_size == 0) ? EMPTY_FILE : OK;
