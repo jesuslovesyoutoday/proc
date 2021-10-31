@@ -198,6 +198,18 @@ void procExec(struct Proc* proc, char* filename)
 			stackPush(&(proc->stack), (void*)&el);
 			ptr += 2;
 			break;
+			
+//-------------------------------------------------------------------------------------------------------//
+
+		case DIV:
+			el1 = stackPop(&(proc->stack));
+			el2 = stackPop(&(proc->stack));
+			el = el2 / el1;
+			stackPush(&(proc->stack), (void*)&el);
+			ptr += 2;
+			break;
+			
+//-------------------------------------------------------------------------------------------------------//
 	}
 	} while(*(ptr) != '\0');
 }
