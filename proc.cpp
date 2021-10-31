@@ -40,7 +40,7 @@ void procExec(struct Proc* proc, char* filename)
 	int args = 0;
 	char* ptr = proc->code;
 	char reg = '0';
-	int el = 0;
+	double el = 0;
 	int ok = 0;
 	do
 	{
@@ -169,6 +169,14 @@ void procExec(struct Proc* proc, char* filename)
 				ptr++;
 			} while (*ptr != '\0');
 			ptr++;
+			break;
+
+//---------------------------------------------------------------------------------------------------------//
+
+		case ADD:
+			el = stackPop(&(proc->stack)) + stackPop(&(proc->stack));
+			stackPush(&(proc->stack), (void*)&el);
+			ptr += 2;
 			break;
 	}
 	} while(*(ptr) != '\0');
